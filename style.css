@@ -1,0 +1,265 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F4F3EE;
+    color: #1A1915;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-width: 640px;
+    width: 100%;
+    padding: 48px 40px;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: #C15F3C;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #FFFFFF;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1A1915;
+}
+
+/* Typography */
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    color: #1A1915;
+}
+
+h2:first-of-type {
+    margin-top: 0;
+}
+
+.subtitle {
+    font-size: 15px;
+    color: #5D5D5A;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.last-updated {
+    font-size: 13px;
+    color: #B1ADA1;
+    margin-bottom: 28px;
+}
+
+/* Body text for legal pages */
+.body p {
+    font-size: 14px;
+    color: #5D5D5A;
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.body ul {
+    font-size: 14px;
+    color: #5D5D5A;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    padding-left: 24px;
+}
+
+.body li {
+    margin-bottom: 6px;
+}
+
+.body strong {
+    color: #1A1915;
+    font-weight: 500;
+}
+
+.body a {
+    color: #C15F3C;
+    text-decoration: none;
+}
+
+.body a:hover {
+    text-decoration: underline;
+}
+
+.body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: #F4F3EE;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #1A1915;
+}
+
+/* Opt-in page specifics */
+.opt-in-box {
+    background: #F4F3EE;
+    border-radius: 10px;
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.opt-in-instruction {
+    font-size: 14px;
+    color: #5D5D5A;
+    margin-bottom: 16px;
+}
+
+.keyword {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: #C15F3C;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.opt-in-to {
+    font-size: 13px;
+    color: #B1ADA1;
+    margin-bottom: 12px;
+}
+
+.phone-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: #1A1915;
+}
+
+.sms-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #C15F3C;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 28px;
+    border-radius: 8px;
+    margin-top: 20px;
+    transition: background 0.15s;
+}
+
+.sms-link:hover {
+    background: #A84E30;
+}
+
+.sms-link svg {
+    width: 18px;
+    height: 18px;
+    fill: #FFFFFF;
+}
+
+.consent {
+    font-size: 13px;
+    color: #5D5D5A;
+    line-height: 1.7;
+    padding: 20px 0;
+    border-top: 1px solid #E8E6E1;
+    margin-bottom: 20px;
+}
+
+.consent strong {
+    color: #1A1915;
+    font-weight: 500;
+}
+
+.opt-out {
+    background: #F4F3EE;
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: #5D5D5A;
+    line-height: 1.6;
+}
+
+.opt-out code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: #E8E6E1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #1A1915;
+}
+
+/* Footer nav */
+.footer-nav {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #E8E6E1;
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+}
+
+.footer-nav a {
+    color: #C15F3C;
+    text-decoration: none;
+}
+
+.footer-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Section divider */
+.section {
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 1px solid #E8E6E1;
+}
+
+/* Contact box */
+.contact-box {
+    background: #F4F3EE;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #5D5D5A;
+    line-height: 1.7;
+}
+
+.contact-box strong {
+    color: #1A1915;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leibniz Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            align-items: flex-start;
+            padding: 48px 24px;
+        }
+
+        .card {
+            max-width: 760px;
+            padding: 56px 48px;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 48px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero .tagline {
+            font-size: 18px;
+            color: #5D5D5A;
+            line-height: 1.6;
+        }
+
+        /* Products */
+        .products {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 600px) {
+            .products { grid-template-columns: 1fr; }
+            .card { padding: 32px 24px; }
+            .hero h1 { font-size: 28px; }
+        }
+
+        .product {
+            background: #F4F3EE;
+            border-radius: 12px;
+            padding: 28px 24px;
+        }
+
+        .product-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 500;
+            color: #C15F3C;
+            margin-bottom: 8px;
+        }
+
+        .product-type {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #B1ADA1;
+            margin-bottom: 12px;
+        }
+
+        .product p {
+            font-size: 14px;
+            color: #5D5D5A;
+            line-height: 1.7;
+        }
+
+        /* How they connect */
+        .connection {
+            background: #1A1915;
+            border-radius: 12px;
+            padding: 28px 24px;
+            margin-bottom: 48px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #B1ADA1;
+            line-height: 2;
+            overflow-x: auto;
+        }
+
+        .connection .accent { color: #C15F3C; }
+        .connection .bright { color: #F4F3EE; }
+        .connection .comment { color: #5D5D5A; }
+
+        /* Founder */
+        .founder {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 600px) {
+            .founder { flex-direction: column; }
+        }
+
+        .founder-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #C15F3C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 600;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .founder-info h2 {
+            margin-top: 0;
+            margin-bottom: 4px;
+        }
+
+        .founder-title {
+            font-size: 14px;
+            color: #C15F3C;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .founder-info p {
+            font-size: 14px;
+            color: #5D5D5A;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .founder-links {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+        }
+
+        .founder-links a {
+            color: #C15F3C;
+            text-decoration: none;
+        }
+
+        .founder-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 600;
+            color: #C15F3C;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #B1ADA1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Principles */
+        .principles {
+            border-top: 1px solid #E8E6E1;
+            padding-top: 32px;
+            margin-bottom: 32px;
+        }
+
+        .principle {
+            margin-bottom: 20px;
+        }
+
+        .principle-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1915;
+            margin-bottom: 4px;
+        }
+
+        .principle p {
+            font-size: 14px;
+            color: #5D5D5A;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            </div>
+            <span class="logo-text">Leibniz Labs</span>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Plans are not side-effects.<br>Plans are first-class values.</h1>
+            <p class="tagline">
+                Leibniz Labs builds tools where knowledge is executable, composable,
+                and persistent. Programs that explain themselves. Definitions that
+                become capabilities.
+            </p>
+        </div>
+
+        <!-- Products -->
+        <div class="products">
+            <div class="product">
+                <div class="product-type">Language</div>
+                <div class="product-name">Universalis</div>
+                <p>
+                    A literate logic programming language that combines natural language
+                    explanations with executable logic. Definitions are first-class values
+                    that can be inspected, composed, verified, and reused. Business rules,
+                    domain knowledge, and decision logic that is both human-readable and
+                    machine-executable.
+                </p>
+            </div>
+            <div class="product">
+                <div class="product-type">AI Assistant</div>
+                <div class="product-name">Automind</div>
+                <p>
+                    A self-extending AI system where Universalis programs automatically
+                    become reusable skills. Claude learns literate logic programming via
+                    a meta-skill, creates definitions, and those definitions become
+                    discoverable capabilities for future sessions. The system grows
+                    with use.
+                </p>
+            </div>
+        </div>
+
+        <!-- How they connect -->
+        <div class="connection">
+            <span class="comment">-- the architecture</span><br>
+            <span class="bright">Claude Code</span> <span class="accent">+</span> <span class="bright">Universalis meta-skill</span> <span class="accent">=</span> <span class="bright">Automind</span><br>
+            <span class="bright">Automind</span> <span class="accent">+</span> <span class="bright">user definitions</span> <span class="accent">=</span> <span class="bright">program-skills</span><br>
+            <span class="bright">program-skills</span> <span class="accent">+</span> <span class="bright">composition</span> <span class="accent">=</span> <span class="bright">self-extending system</span><br>
+            <br>
+            <span class="comment">-- in other systems, a plan runs, produces output, and evaporates.</span><br>
+            <span class="comment">-- here, the plan IS the capability.</span>
+        </div>
+
+        <!-- Founder -->
+        <div class="founder">
+            <div class="founder-photo">EM</div>
+            <div class="founder-info">
+                <h2>Erik Meijer</h2>
+                <div class="founder-title">Founder</div>
+                <p>
+                    Language, API, and type system designer. Inventor of Rx (Reactive Extensions)
+                    with implementations across dozens of languages. Over 300 issued patents
+                    in query expressions, type inference, asynchronous programming, and
+                    data access optimization.
+                </p>
+                <p>
+                    Previously at Microsoft, Facebook, and other organizations where he
+                    shaped how developers work with data, concurrency, and reactive systems.
+                    Now building the next generation of AI-native programming tools at
+                    Leibniz Labs in Palo Alto.
+                </p>
+                <div class="founder-links">
+                    <a href="https://www.linkedin.com/in/erikmeijer1/">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">300+</div>
+                <div class="stat-label">Patents Issued</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">263</div>
+                <div class="stat-label">Patents Pending</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">Rx</div>
+                <div class="stat-label">Invented</div>
+            </div>
+        </div>
+
+        <!-- Principles -->
+        <div class="principles">
+            <h2>Principles</h2>
+
+            <div class="principle">
+                <div class="principle-title">Definitions over instructions</div>
+                <p>
+                    Traditional AI agents execute plans and discard them. We treat definitions
+                    as persistent, composable artifacts. A definition can be read, queried,
+                    verified, modified, and shared.
+                </p>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">Literate by default</div>
+                <p>
+                    Every program explains itself. Natural language and executable logic
+                    coexist in the same document. The explanation is not a comment on the
+                    code — it is part of the program.
+                </p>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">Self-extending systems</div>
+                <p>
+                    Each definition the AI creates becomes a skill it can use in future
+                    sessions. The system's capabilities grow with every interaction,
+                    without retraining or redeployment.
+                </p>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">Latent state over explicit modes</div>
+                <p>
+                    No modal state machines. No CHAT/PLAN/EXECUTE transitions.
+                    State emerges from which tools have been called and which
+                    artifacts exist. The right behavior surfaces naturally.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="contact-box">
+            <strong>Leibniz Labs</strong>
+            Palo Alto, California<br>
+            erik@automind.dev
+        </div>
+
+        <div class="footer-nav">
+            <a href="index.html">Automind SMS</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+        </div>
+    </div>
+</body>
+</html>
