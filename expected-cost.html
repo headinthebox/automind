@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Expected Cost: Criminal Law vs AI Dual</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 24px; max-width: 1100px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 920px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .row { margin: 14px 0; }
+  .big { font-weight: 800; }
+  .muted { color: #555; }
+
+  input[type="range"] { width: 100%; }
+
+  .box { padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid #eee; }
+  .highlight { background: #fff4d6; border-color: #f4d08a; }
+
+  .green { color: #0b6b2b; }
+  .red { color: #8b0000; }
+
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1px solid #ddd; background: #fafafa; }
+  hr { border: none; border-top: 1px solid #eee; margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="big mono">One Evidence Slider, Two Policies (Human Law vs AI Dual)</div>
+  <div class="muted" style="margin-top:6px;">
+    Move evidence: <span class="mono">p = P(G|E)</span> (left panel) and <span class="mono">p = P(D|E)</span> (right panel).
+    Each panel chooses the lower expected cost and highlights it.
+  </div>
+
+  <div class="row">
+    <div class="mono">
+      Evidence strength <span class="pill">p</span>:
+      <span class="mono">P(G|E)</span> / <span class="mono">P(D|E)</span> =
+      <span id="pVal" class="mono"></span>
+    </div>
+    <input type="range" id="p" min="0" max="1" step="0.001" value="0.50"/>
+  </div>
+
+  <div class="grid">
+
+    <!-- HUMAN / CRIMINAL LAW PANEL -->
+    <div class="card">
+      <div class="big mono">Criminal law</div>
+      <div class="muted" style="margin-top:6px;">
+        <span class="mono">G</span> = guilty, <span class="mono">¬G</span> = innocent.
+      </div>
+
+      <div class="row">
+        <div class="mono">
+          Policy threshold <span class="pill">τ</span>:
+          <span id="tauHVal" class="mono"></span>
+          <span class="muted"> (convict if <span class="mono">P(G|E) &gt; τ</span>)</span>
+        </div>
+        <input type="range" id="tauH" min="0.50" max="0.999" step="0.001" value="0.95"/>
+        <div class="muted" style="margin-top:6px;">
+          Implied moral ratio: <span class="mono">Cᵢ/Cg = τ/(1−τ)</span> ≈ <span id="ratioH" class="mono"></span>×
+          <span class="muted"> (</span><span class="mono">praesumptio innocentiae</span><span class="muted">)</span>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div id="convictBox" class="box">
+        <div class="mono red">
+          E[cost | convict, E] = Cᵢ · (1 − P(G|E))
+        </div>
+        <div class="mono" id="convictCost"></div>
+        <div class="muted" style="margin-top:4px;">
+          (wrongful conviction)
+        </div>
+      </div>
+
+      <div id="acquitBox" class="box">
+        <div class="mono green">
+          E[cost | acquit, E] = Cg · P(G|E)
+        </div>
+        <div class="mono" id="acquitCost"></div>
+        <div class="muted" style="margin-top:4px;">
+          (letting guilt go free) — <span class="mono">in dubio pro reo</span>
+        </div>
+      </div>
+
+      <div class="row big" id="decisionH"></div>
+      <div class="muted">
+        Convict side corresponds to <span class="mono">probatio ultra dubium rationabile</span>.
+      </div>
+    </div>
+
+    <!-- AI DUAL PANEL -->
+    <div class="card">
+      <div class="big mono">AI dual (catastrophic-risk posture)</div>
+      <div class="muted" style="margin-top:6px;">
+        <span class="mono">D</span> = dangerous, <span class="mono">¬D</span> = benign.
+      </div>
+
+      <div class="row">
+        <div class="mono">
+          Policy threshold <span class="pill">τ</span>:
+          <span id="tauAVal" class="mono"></span>
+          <span class="muted"> (deploy if <span class="mono">P(D|E) &lt; τ</span>)</span>
+        </div>
+        <input type="range" id="tauA" min="0.001" max="0.50" step="0.001" value="0.05"/>
+        <div class="muted" style="margin-top:6px;">
+          Implied risk ratio: <span class="mono">Cᴅ/Cʀ = (1−τ)/τ</span> ≈ <span id="ratioA" class="mono"></span>×
+          <span class="muted">(catastrophic-harm weighting)</span>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div id="deployBox" class="box">
+        <div class="mono red">
+          E[cost | deploy, E] = Cᴅ · P(D|E)
+        </div>
+        <div class="mono" id="deployCost"></div>
+        <div class="muted" style="margin-top:4px;">
+          (deploying a dangerous system)
+        </div>
+      </div>
+
+      <div id="restrictBox" class="box">
+        <div class="mono green">
+          E[cost | restrict, E] = Cʀ · (1 − P(D|E))
+        </div>
+        <div class="mono" id="restrictCost"></div>
+        <div class="muted" style="margin-top:4px;">
+          (wrongly restricting a benign system)
+        </div>
+      </div>
+
+      <div class="row big" id="decisionA"></div>
+      <div class="muted">
+        With <span class="mono">Cᴅ ≫ Cʀ</span>, default becomes "when in doubt, restrict."
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const pSlider = document.getElementById("p");
+const pVal = document.getElementById("pVal");
+
+// Human
+const tauH = document.getElementById("tauH");
+const tauHVal = document.getElementById("tauHVal");
+const ratioH = document.getElementById("ratioH");
+const convictBox = document.getElementById("convictBox");
+const acquitBox = document.getElementById("acquitBox");
+const convictCostEl = document.getElementById("convictCost");
+const acquitCostEl = document.getElementById("acquitCost");
+const decisionH = document.getElementById("decisionH");
+
+// AI
+const tauA = document.getElementById("tauA");
+const tauAVal = document.getElementById("tauAVal");
+const ratioA = document.getElementById("ratioA");
+const deployBox = document.getElementById("deployBox");
+const restrictBox = document.getElementById("restrictBox");
+const deployCostEl = document.getElementById("deployCost");
+const restrictCostEl = document.getElementById("restrictCost");
+const decisionA = document.getElementById("decisionA");
+
+function fmt(x) { return x.toFixed(3); }
+function fmtRatio(x) {
+  if (!isFinite(x)) return "∞";
+  if (x >= 1000) return x.toFixed(0);
+  if (x >= 100) return x.toFixed(1);
+  if (x >= 10) return x.toFixed(2);
+  return x.toFixed(3);
+}
+
+function update() {
+  const p = parseFloat(pSlider.value);
+  pVal.textContent = p.toFixed(3);
+
+  // ----- Criminal law panel -----
+  const tH = parseFloat(tauH.value);
+  const rH = tH / (1 - tH); // Ci/Cg
+  tauHVal.textContent = tH.toFixed(3);
+  ratioH.textContent = fmtRatio(rH);
+
+  // Use Cg = 1, Ci = rH
+  const Ci = rH;
+  const Cg = 1;
+
+  const costConvict = Ci * (1 - p);
+  const costAcquit = Cg * p;
+
+  convictCostEl.textContent = "≈ " + fmt(costConvict);
+  acquitCostEl.textContent = "≈ " + fmt(costAcquit);
+
+  convictBox.classList.remove("highlight");
+  acquitBox.classList.remove("highlight");
+
+  // Choose lower expected cost
+  if (costConvict < costAcquit) {
+    convictBox.classList.add("highlight");
+    decisionH.textContent = "→ CONVICT (lower expected cost)";
+  } else {
+    acquitBox.classList.add("highlight");
+    decisionH.textContent = "→ ACQUIT (lower expected cost)";
+  }
+
+  // ----- AI dual panel -----
+  const tA = parseFloat(tauA.value);
+  // For AI we parameterize via tau directly: tau = Cr / (Cd + Cr)
+  // Hence Cd/Cr = (1 - tau)/tau
+  const rA = (1 - tA) / tA; // Cd/Cr
+  tauAVal.textContent = tA.toFixed(3);
+  ratioA.textContent = fmtRatio(rA);
+
+  // Use Cr = 1, Cd = rA
+  const Cr = 1;
+  const Cd = rA;
+
+  // p is interpreted as P(D|E)
+  const costDeploy = Cd * p;
+  const costRestrict = Cr * (1 - p);
+
+  deployCostEl.textContent = "≈ " + fmt(costDeploy);
+  restrictCostEl.textContent = "≈ " + fmt(costRestrict);
+
+  deployBox.classList.remove("highlight");
+  restrictBox.classList.remove("highlight");
+
+  if (costDeploy < costRestrict) {
+    deployBox.classList.add("highlight");
+    decisionA.textContent = "→ DEPLOY (lower expected cost)";
+  } else {
+    restrictBox.classList.add("highlight");
+    decisionA.textContent = "→ RESTRICT (lower expected cost)";
+  }
+}
+
+[pSlider, tauH, tauA].forEach(el => el.addEventListener("input", update));
+update();
+</script>
+
+</body>
+</html>
