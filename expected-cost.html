@@ -31,15 +31,11 @@
 
 <div class="card">
   <div class="big mono">One Evidence Slider, Two Policies (Human Law vs AI Dual)</div>
-  <div class="muted" style="margin-top:6px;">
-    Move evidence: <span class="mono">p = P(G|E)</span> (left panel) and <span class="mono">p = P(D|E)</span> (right panel).
-    Each panel chooses the lower expected cost and highlights it.
-  </div>
 
   <div class="row">
     <div class="mono">
-      Evidence strength <span class="pill">p</span>:
-      <span class="mono">P(G|E)</span> / <span class="mono">P(D|E)</span> =
+      How convinced are we of guilt, <span class="mono">P(Guilty|Evidence)</span>, in left panel,
+      how convinced are we of danger, <span class="mono">P(Dangerous|Evidence)</span>, in right panel =
       <span id="pVal" class="mono"></span>
     </div>
     <input type="range" id="p" min="0" max="1" step="0.001" value="0.50"/>
@@ -49,21 +45,19 @@
 
     <!-- HUMAN / CRIMINAL LAW PANEL -->
     <div class="card">
-      <div class="big mono">Criminal law</div>
-      <div class="muted" style="margin-top:6px;">
-        <span class="mono">G</span> = guilty, <span class="mono">¬G</span> = innocent.
-      </div>
+      <div class="big mono">Human (criminal law)</div>
 
       <div class="row">
         <div class="mono">
-          Policy threshold <span class="pill">τ</span>:
+          Beyond reasonable doubt threshold <span class="pill">τ</span>:
           <span id="tauHVal" class="mono"></span>
-          <span class="muted"> (convict if <span class="mono">P(G|E) &gt; τ</span>)</span>
+          <span class="muted"> (higher is safer for the accused)</span>
         </div>
         <input type="range" id="tauH" min="0.50" max="0.999" step="0.001" value="0.95"/>
         <div class="muted" style="margin-top:6px;">
-          Implied moral ratio: <span class="mono">Cᵢ/Cg = τ/(1−τ)</span> ≈ <span id="ratioH" class="mono"></span>×
-          <span class="muted"> (</span><span class="mono">praesumptio innocentiae</span><span class="muted">)</span>
+          Implied moral weighting: Harm of punishing an innocent person
+          is treated as <span class="mono">τ/(1−τ)</span> ≈ <span id="ratioH" class="mono"></span>× worse than letting a guilty person go free.
+          (<span class="mono">praesumptio innocentiae</span>)
         </div>
       </div>
 
@@ -71,76 +65,66 @@
 
       <div id="convictBox" class="box">
         <div class="mono red">
-          E[cost | convict, E] = Cᵢ · (1 − P(G|E))
+          If belief of guilt &gt; threshold
         </div>
+        <div class="mono red big">→ Convict <span class="muted">(probatio ultra dubium rationabile)</span></div>
+        <div class="mono" style="margin-top:6px;">Expected harm of conviction = Harm(punish innocent) · P(Innocent|Evidence)</div>
         <div class="mono" id="convictCost"></div>
-        <div class="muted" style="margin-top:4px;">
-          (wrongful conviction)
-        </div>
       </div>
 
       <div id="acquitBox" class="box">
         <div class="mono green">
-          E[cost | acquit, E] = Cg · P(G|E)
+          If belief of guilt ≤ threshold
         </div>
+        <div class="mono green big">→ Acquit <span class="muted">(in dubio pro reo)</span></div>
+        <div class="mono" style="margin-top:6px;">Expected harm of acquittal = Harm(let guilty go free) · P(Guilty|Evidence)</div>
         <div class="mono" id="acquitCost"></div>
-        <div class="muted" style="margin-top:4px;">
-          (letting guilt go free) — <span class="mono">in dubio pro reo</span>
-        </div>
       </div>
 
       <div class="row big" id="decisionH"></div>
-      <div class="muted">
-        Convict side corresponds to <span class="mono">probatio ultra dubium rationabile</span>.
-      </div>
+      <div class="muted" id="summaryH"></div>
     </div>
 
     <!-- AI DUAL PANEL -->
     <div class="card">
-      <div class="big mono">AI dual (catastrophic-risk posture)</div>
-      <div class="muted" style="margin-top:6px;">
-        <span class="mono">D</span> = dangerous, <span class="mono">¬D</span> = benign.
-      </div>
+      <div class="big mono">AI (dual)</div>
 
       <div class="row">
         <div class="mono">
-          Policy threshold <span class="pill">τ</span>:
+          Safety confidence threshold <span class="pill">τ</span>:
           <span id="tauAVal" class="mono"></span>
-          <span class="muted"> (deploy if <span class="mono">P(D|E) &lt; τ</span>)</span>
+          <span class="muted"> (higher is safer for the exposed)</span>
         </div>
         <input type="range" id="tauA" min="0.001" max="0.50" step="0.001" value="0.05"/>
         <div class="muted" style="margin-top:6px;">
-          Implied risk ratio: <span class="mono">Cᴅ/Cʀ = (1−τ)/τ</span> ≈ <span id="ratioA" class="mono"></span>×
-          <span class="muted">(catastrophic-harm weighting)</span>
+          Implied risk weighting: Harm of deploying a dangerous system
+          is treated as <span class="mono">(1−τ)/τ</span> ≈ <span id="ratioA" class="mono"></span>× worse than restricting a safe one.
+          (catastrophic-risk posture)
         </div>
       </div>
 
       <hr/>
 
       <div id="deployBox" class="box">
-        <div class="mono red">
-          E[cost | deploy, E] = Cᴅ · P(D|E)
+        <div class="mono green">
+          If belief of safety &gt; threshold
         </div>
+        <div class="mono green big">→ Deploy <span class="muted">(probatio ultra dubium securitatis)</span></div>
+        <div class="mono" style="margin-top:6px;">Expected harm of deployment = Harm(deploy dangerous system) · P(Dangerous|Evidence)</div>
         <div class="mono" id="deployCost"></div>
-        <div class="muted" style="margin-top:4px;">
-          (deploying a dangerous system)
-        </div>
       </div>
 
       <div id="restrictBox" class="box">
-        <div class="mono green">
-          E[cost | restrict, E] = Cʀ · (1 − P(D|E))
+        <div class="mono red">
+          If belief of safety ≤ threshold
         </div>
+        <div class="mono red big">→ Restrict <span class="muted">(in dubio pro securitate)</span></div>
+        <div class="mono" style="margin-top:6px;">Expected harm of restriction = Harm(restrict safe system) · P(Safe|Evidence)</div>
         <div class="mono" id="restrictCost"></div>
-        <div class="muted" style="margin-top:4px;">
-          (wrongly restricting a benign system)
-        </div>
       </div>
 
       <div class="row big" id="decisionA"></div>
-      <div class="muted">
-        With <span class="mono">Cᴅ ≫ Cʀ</span>, default becomes "when in doubt, restrict."
-      </div>
+      <div class="muted" id="summaryA"></div>
     </div>
 
   </div>
@@ -159,6 +143,7 @@ const acquitBox = document.getElementById("acquitBox");
 const convictCostEl = document.getElementById("convictCost");
 const acquitCostEl = document.getElementById("acquitCost");
 const decisionH = document.getElementById("decisionH");
+const summaryH = document.getElementById("summaryH");
 
 // AI
 const tauA = document.getElementById("tauA");
@@ -169,6 +154,7 @@ const restrictBox = document.getElementById("restrictBox");
 const deployCostEl = document.getElementById("deployCost");
 const restrictCostEl = document.getElementById("restrictCost");
 const decisionA = document.getElementById("decisionA");
+const summaryA = document.getElementById("summaryA");
 
 function fmt(x) { return x.toFixed(3); }
 function fmtRatio(x) {
@@ -206,9 +192,11 @@ function update() {
   if (costConvict < costAcquit) {
     convictBox.classList.add("highlight");
     decisionH.textContent = "→ CONVICT (lower expected cost)";
+    summaryH.textContent = "Convict only if guilt is beyond reasonable doubt.";
   } else {
     acquitBox.classList.add("highlight");
     decisionH.textContent = "→ ACQUIT (lower expected cost)";
+    summaryH.textContent = "Otherwise, when in doubt, acquit.";
   }
 
   // ----- AI dual panel -----
@@ -223,7 +211,7 @@ function update() {
   const Cr = 1;
   const Cd = rA;
 
-  // p is interpreted as P(D|E)
+  // p is interpreted as P(Dangerous|Evidence)
   const costDeploy = Cd * p;
   const costRestrict = Cr * (1 - p);
 
@@ -236,9 +224,11 @@ function update() {
   if (costDeploy < costRestrict) {
     deployBox.classList.add("highlight");
     decisionA.textContent = "→ DEPLOY (lower expected cost)";
+    summaryA.textContent = "Deploy only if safety is beyond reasonable doubt.";
   } else {
     restrictBox.classList.add("highlight");
     decisionA.textContent = "→ RESTRICT (lower expected cost)";
+    summaryA.textContent = "Otherwise, when in doubt, restrict.";
   }
 }
 
